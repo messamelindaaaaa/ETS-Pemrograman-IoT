@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Cuaca ESP32</title>
+    <style>
+      /* ---- STYLE DASAR ---- */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #f3e8ff, #ede7f6);
+        margin: 0;
+        padding: 0;
+        color: #4a4468;
+      }
+
+      header {
+        background: #7d5ba6;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 26px;
+        letter-spacing: 1px;
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 25px 30px;
+      }
+
+      /* ---- INFO CARD ---- */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: linear-gradient(to bottom right, #b39ddb, #9575cd);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .card p {
+        margin-top: 8px;
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      /* ---- TABEL ---- */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 12px 10px;
+        text-align: center;
+      }
+
+      th {
+        background: #7d5ba6;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 14px;
+      }
+
+      tr:nth-child(even) {
+        background: #f7f2fd;
+      }
+
+      tr:hover {
+        background: #e8defa;
+      }
+
+      td {
+        color: #4a4468;
+      }
+
+      footer {
+        text-align: center;
+        padding: 15px;
+        background: #7d5ba6;
+        color: white;
+        margin-top: 40px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>💜 Dashboard Monitoring Cuaca ESP32</h1>
+    </header>
+
+    <main>
+      <div class="cards">
+        <div class="card">
+          <h3>🌡️ Suhu Minimal</h3>
+          <p>{{ data|map(attribute='suhu')|min }} °C</p>
+        </div>
+        <div class="card">
+          <h3>💧 Suhu Maksimal</h3>
+          <p>{{ data|map(attribute='suhu')|max }} °C</p>
+        </div>
+        <div class="card">
+          <h3>💡 Rata-rata Suhu</h3>
+          <p>{% if data|length > 0 %} {{ (data|map(attribute='suhu')|sum / data|length) | round(1) }} °C {% else %} 0 °C {% endif %}</p>
+        </div>
+      </div>
+
+      <h2 style="text-align: center; margin-bottom: 15px">📋 Data Terbaru</h2>
+      <table>
+        <tr>
+          <th>Data</th>
+          <th>Suhu (°C)</th>
+          <th>Kelembapan (%)</th>
+          <th>Kecerahan (Lux)</th>
+          <th>Waktu</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+          <td>{{ row['id'] }}</td>
+          <td>{{ row['suhu'] }}</td>
+          <td>{{ row['humid'] }}</td>
+          <td>{{ row['lux'] }}</td>
+          <td>{{ row['ts'] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </main>
+
+    <footer>© 2025 Sistem Monitoring Cuaca IoT ESP32 • Tema Lilac</footer>
+  </body>
+</html>
